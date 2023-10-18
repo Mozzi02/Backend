@@ -12,7 +12,7 @@ Gestion de Stock para tienda de indumentaria
 
 ## Repositorios
 * [Frontend app](https://github.com/Mozzi02/Frontend)
-* Backend app
+* [Backend app](https://github.com/Mozzi02/Backend)
 
 ## TEMA: 
 
