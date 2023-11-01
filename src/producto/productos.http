@@ -1,0 +1,45 @@
+### obtener todos los productos
+GET http://localhost:3000/api/productos
+
+### obtener un producto
+GET http://localhost:3000/api/productos/1
+
+### crear un nuevo producto
+POST http://localhost:3000/api/productos
+Content-Type: application/json
+
+{
+  "idProducto": "2",
+  "descripcion": "Pantalon de Mozzi",
+  "precio": 10000,
+  "idTipo": 2,
+  "stock": 10,
+  "imagen": "otra url cualquiera"
+}
+
+### modificar un producto con put
+PUT http://localhost:3000/api/productos/1
+Content-Type: application/json
+
+{
+  "idProducto": "1",
+  "descripcion": "Campera de mozzi modificada con put",
+  "precio": 150000,
+  "idTipo": 1,
+  "stock": 105,
+  "imagen": "una url cualquiera modificada con put"
+}
+
+### modificar un producto con patch
+PATCH http://localhost:3000/api/productos/1
+Content-Type: application/json
+
+{
+  "idProducto": "1",
+  "descripcion": "Campera de mozzi modificada con patch",
+  "precio": 150000,
+  "imagen": "una url cualquiera modificada con patch"
+}
+
+### eliminar un producto
+DELETE http://localhost:3000/api/productos/2
