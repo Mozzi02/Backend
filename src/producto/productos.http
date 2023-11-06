@@ -9,21 +9,21 @@ POST http://localhost:3000/api/productos
 Content-Type: application/json
 
 {
-  "idProducto": "2",
-  "descripcion": "Pantalon de Mozzi",
-  "precio": 10000,
-  "idTipo": 2,
+  "idProducto": "1",
+  "descripcion": "Pantalon de Mozzi v5",
+  "precio": 24000,
+  "idTipo": 4,
   "stock": 10,
-  "imagen": "otra url cualquiera"
+  "imagen": "una url cualquiera"
 }
 
 ### modificar un producto con put
-PUT http://localhost:3000/api/productos/1
+PUT http://localhost:3000/api/productos/14
 Content-Type: application/json
 
 {
-  "idProducto": "1",
-  "descripcion": "Campera de mozzi modificada con put",
+  "idProducto": "14",
+  "descripcion": "Pantalon de mozzi modificado con put",
   "precio": 150000,
   "idTipo": 1,
   "stock": 105,
@@ -31,15 +31,15 @@ Content-Type: application/json
 }
 
 ### modificar un producto con patch
-PATCH http://localhost:3000/api/productos/1
+PATCH http://localhost:3000/api/productos/14
 Content-Type: application/json
 
 {
-  "idProducto": "1",
-  "descripcion": "Campera de mozzi modificada con patch",
+  "idProducto": "14",
+  "descripcion": "Pantalon de mozzi modificado con patch",
   "precio": 150000,
   "imagen": "una url cualquiera modificada con patch"
 }
 
 ### eliminar un producto
-DELETE http://localhost:3000/api/productos/2
+DELETE http://localhost:3000/api/productos/9

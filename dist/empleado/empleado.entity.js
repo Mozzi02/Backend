@@ -8,9 +8,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Entity, Property, ManyToOne, PrimaryKey, OneToMany, Cascade, Collection } from '@mikro-orm/core';
-import { TipoProducto } from '../tipoProducto/tipoProducto.entity.js';
+import { Rol } from '../rol/rol.entity.js';
 import { Pedido } from '../pedido/pedido.entity.js';
-let Producto = class Producto {
+let Empleado = class Empleado {
     constructor() {
         this.pedidos = new Collection(this);
     }
@@ -18,33 +18,45 @@ let Producto = class Producto {
 __decorate([
     PrimaryKey(),
     __metadata("design:type", Number)
-], Producto.prototype, "idProducto", void 0);
+], Empleado.prototype, "idEmpleado", void 0);
 __decorate([
     Property({ nullable: false }),
     __metadata("design:type", String)
-], Producto.prototype, "descripcion", void 0);
-__decorate([
-    Property({ nullable: false, unsigned: true }),
-    __metadata("design:type", Number)
-], Producto.prototype, "precio", void 0);
-__decorate([
-    ManyToOne(() => TipoProducto, { nullable: false, unsigned: true }),
-    __metadata("design:type", TipoProducto)
-], Producto.prototype, "tipoProducto", void 0);
-__decorate([
-    Property({ nullable: false, unsigned: true }),
-    __metadata("design:type", Number)
-], Producto.prototype, "stock", void 0);
+], Empleado.prototype, "nombre", void 0);
 __decorate([
     Property({ nullable: false }),
     __metadata("design:type", String)
-], Producto.prototype, "imagen", void 0);
+], Empleado.prototype, "apellido", void 0);
 __decorate([
-    OneToMany(() => Pedido, pedido => pedido.producto, { cascade: [Cascade.ALL] }),
+    Property(),
+    __metadata("design:type", String)
+], Empleado.prototype, "telefono", void 0);
+__decorate([
+    Property({ nullable: false }),
+    __metadata("design:type", String)
+], Empleado.prototype, "email", void 0);
+__decorate([
+    Property(),
+    __metadata("design:type", String)
+], Empleado.prototype, "direccion", void 0);
+__decorate([
+    Property({ nullable: false, unique: true }),
+    __metadata("design:type", String)
+], Empleado.prototype, "dni", void 0);
+__decorate([
+    ManyToOne(() => Rol, { nullable: false, unsigned: true }),
+    __metadata("design:type", Rol)
+], Empleado.prototype, "rol", void 0);
+__decorate([
+    Property({ nullable: false }),
+    __metadata("design:type", String)
+], Empleado.prototype, "password", void 0);
+__decorate([
+    OneToMany(() => Pedido, pedido => pedido.empleado, { cascade: [Cascade.ALL] }),
     __metadata("design:type", Object)
-], Producto.prototype, "pedidos", void 0);
-Producto = __decorate([
+], Empleado.prototype, "pedidos", void 0);
+Empleado = __decorate([
     Entity()
-], Producto);
-export { Producto };
-//# sourceMappingURL=producto.entity.js.map
+], Empleado);
+export { Empleado };
+//# sourceMappingURL=empleado.entity.js.map

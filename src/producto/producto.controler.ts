@@ -1,9 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ProductoRepository } from './producto.repository.js';
 import { Producto } from './producto.entity.js';
-
-
-const repository = new ProductoRepository();
 
 
 function sanitizeProductoInput(req: Request, res: Response, next: NextFunction){
@@ -25,46 +21,27 @@ function sanitizeProductoInput(req: Request, res: Response, next: NextFunction){
 
 
 async function findAll(req: Request, res: Response) {
-  res.json({ data: await repository.findAll() })
+  res.status(500).json({message: 'not implemented'});
 };
 
 
 async function findOne(req:Request, res:Response){
-  const idProducto = req.params.idProducto;
-  const producto = await repository.findOne({idProducto})
-  if (!producto) {
-    return res.status(404).send({message: 'Producto not found'});
-  }
-  res.json({data: producto});
+  res.status(500).json({message: 'not implemented'});
 }
 
 
-function add(req: Request, res:Response) {
-  const input = req.body.sanitizedInput;
-  const productoInput = new Producto(input.idProducto, input.descripcion, input.precio, input.idTipo, input.stock, input.imagen);
-  const producto = repository.add(productoInput)
-  return res.status(201).send({ message: 'Producto created', data: producto })
+async function add(req: Request, res:Response) {
+  res.status(500).json({message: 'not implemented'});
 };
 
 
-function update(req: Request, res: Response){
-  req.body.sanitizedInput.idProducto = req.params.idProducto;
-  const producto = repository.update(req.body.sanitizedInput)
-  if(!producto) {
-    return res.status(404).send({message: 'Producto not found'})
-  }
-  return res.status(200).send({message: 'Producto updated succesfully', data: producto});
+async function update(req: Request, res: Response){
+  res.status(500).json({message: 'not implemented'});
 };
 
 
-function remove(req: Request, res: Response){
-  const id = req.params.idProducto;
-  const producto = repository.delete({id});
-  if(!producto){
-    res.status(404).send({message: 'Producto not found'})
-  } else {
-    res.status(200).send({message: 'Producto deleted succesfully'})
-  }
+async function remove(req: Request, res: Response){
+  res.status(500).json({message: 'not implemented'});
 }
 
 

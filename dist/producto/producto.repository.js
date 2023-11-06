@@ -13,14 +13,28 @@ export class ProductoRepository {
         const producto = productos[0];
         return producto;
     }
-    add(item) {
-        throw new Error('not implemented');
+    async add(productoInput) {
+        const { idProducto, ...productoRow } = productoInput;
+        const [result] = await pool.query('insert into producto set ?', [productoRow]);
+        productoInput.idProducto = result.insertId;
+        return productoInput;
     }
-    update(item) {
-        throw new Error('not implemented');
+    async update(productoInput) {
+        const { idProducto, ...productoRow } = productoInput;
+        const idProductoStr = idProducto.toString();
+        await pool.query('update producto set ? where idProducto = ?', [productoRow, idProducto]);
+        return await this.findOne({ idProducto: idProductoStr });
     }
-    delete(item) {
-        throw new Error('not implemented');
+    async delete(item) {
+        try {
+            const productoABorrar = await this.findOne(item);
+            const idProducto = Number.parseInt(item.idProducto);
+            await pool.query('delete from producto where idProducto = ?', [idProducto]);
+            return productoABorrar;
+        }
+        catch (error) {
+            throw new Error('unable to delete producto');
+        }
     }
 }
 //# sourceMappingURL=producto.repository.js.map
