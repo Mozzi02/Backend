@@ -1,11 +1,12 @@
 import { Entity, Property, ManyToOne, PrimaryKey, OneToMany, Cascade, Collection, Rel} from '@mikro-orm/core';
 import { TipoProducto } from '../tipoProducto/tipoProducto.entity.js';
 import { Pedido } from '../pedido/pedido.entity.js';
+import { LineaDeVenta } from '../lineadeventa/lineaDeVenta.entity.js';
 
 @Entity()
 export class Producto {
   @PrimaryKey()
-  idProducto!: number
+  idProducto?: number
 
   @Property({nullable: false})
   descripcion!: string
@@ -24,4 +25,7 @@ export class Producto {
 
   @OneToMany(() => Pedido, pedido => pedido.producto, {cascade: [Cascade.ALL]})
   pedidos = new Collection<Pedido>(this);
+
+  @OneToMany(() => LineaDeVenta, linea => linea.producto, {cascade: [Cascade.ALL]})
+  lineas = new Collection<LineaDeVenta>(this);
 }

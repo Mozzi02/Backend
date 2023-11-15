@@ -3,7 +3,7 @@ import { Cliente } from '../cliente/cliente.entity.js';
 
 @Entity()
 export class Categoria {
-        @PrimaryKey({nullable: false, unsigned: true, autoincrement: true})
+        @PrimaryKey({nullable: false, unsigned: true})
         idCategoria!: number
 
         @Property({nullable: false})

@@ -26,13 +26,27 @@ function sanitizeProductoInput(req: Request, res: Response, next: NextFunction){
 
 async function findAll(req: Request, res: Response) {
   try {
-    const productos = await em.find(Producto, {}, {populate: ['tipoProducto']})
+    const filter:{descripcion?:string}={}
+    if(req.params.descripcion){
+      filter.descripcion=req.params.descripcion
+    }
+    const productos = await em.find(Producto, filter, {populate: ['tipoProducto']})
     res.status(200).json({message: 'found all productos', data: productos})
   } catch (error: any){
     res.status(500).json({message: error.message})
   }
 };
 
+/*
+async function findSome(req: Request, res: Respones){
+  try {
+    const productos = await em.find(Producto, {descripcion}, {populate: ['tipoProducto']})
+    res.status(200).json({message: 'found all productos that match', data: productos})
+  } catch (error: any) {
+    res.status(500).json({message: error.message})
+  }
+}
+*/
 
 async function findOne(req:Request, res:Response){
   try {

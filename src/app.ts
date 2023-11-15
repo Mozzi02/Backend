@@ -12,10 +12,11 @@ import { empleadoRoutes } from './empleado/empleado.routes.js';
 import { lineaDeVentaRoutes } from './lineadeventa/lineaDeVenta.routes.js';
 import { pedidoRoutes } from './pedido/pedido.routes.js';
 import { ventaRoutes } from './venta/venta.routes.js';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
-
+app.use(cors())
 
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next)

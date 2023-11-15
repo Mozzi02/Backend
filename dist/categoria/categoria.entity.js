@@ -15,7 +15,7 @@ let Categoria = class Categoria {
     }
 };
 __decorate([
-    PrimaryKey({ nullable: false, unsigned: true, autoincrement: true }),
+    PrimaryKey({ nullable: false, unsigned: true }),
     __metadata("design:type", Number)
 ], Categoria.prototype, "idCategoria", void 0);
 __decorate([
