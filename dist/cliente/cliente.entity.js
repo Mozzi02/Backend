@@ -7,9 +7,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, Property, ManyToOne, PrimaryKey } from '@mikro-orm/core';
+import { Entity, Property, ManyToOne, PrimaryKey, OneToMany, Cascade, Collection } from '@mikro-orm/core';
 import { Categoria } from '../categoria/categoria.entity.js';
+import { Venta } from '../venta/venta.entity.js';
 let Cliente = class Cliente {
+    constructor() {
+        this.ventas = new Collection(this);
+    }
 };
 __decorate([
     PrimaryKey(),
@@ -43,6 +47,10 @@ __decorate([
     ManyToOne(() => Categoria, { nullable: false, unsigned: true }),
     __metadata("design:type", Object)
 ], Cliente.prototype, "categoria", void 0);
+__decorate([
+    OneToMany(() => Venta, venta => venta.cliente, { cascade: [Cascade.ALL] }),
+    __metadata("design:type", Object)
+], Cliente.prototype, "ventas", void 0);
 Cliente = __decorate([
     Entity()
 ], Cliente);
