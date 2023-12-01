@@ -46,7 +46,7 @@ async function update(req, res) {
 async function remove(req, res) {
     try {
         const idTipo = Number.parseInt(req.params.idTipo);
-        const tipoProducto = em.findOneOrFail(TipoProducto, { idTipo });
+        const tipoProducto = await em.findOneOrFail(TipoProducto, { idTipo });
         await em.removeAndFlush(tipoProducto);
         res.status(200).send({ message: 'tipo producto deleted' });
     }
