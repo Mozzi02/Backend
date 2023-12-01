@@ -1,5 +1,6 @@
 import { orm } from '../shared/db/orm.js';
 import { Cliente } from './cliente.entity.js';
+import { Categoria } from '../categoria/categoria.entity.js';
 const em = orm.em;
 async function findAll(req, res) {
     try {
@@ -23,7 +24,14 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const cliente = em.create(Cliente, req.body);
+        const clienteData = req.body;
+        if (clienteData.categoria) {
+            const categoriaExistente = await em.findOneOrFail(Categoria, clienteData.categoria.idCategoria);
+            if (categoriaExistente) {
+                clienteData.categoria = categoriaExistente;
+            }
+        }
+        const cliente = em.create(Cliente, clienteData);
         await em.flush();
         res.status(201).json({ message: 'cliente created', data: cliente });
     }
@@ -48,7 +56,7 @@ async function update(req, res) {
 async function remove(req, res) {
     try {
         const idCliente = Number.parseInt(req.params.idCliente);
-        const cliente = em.findOneOrFail(Cliente, { idCliente });
+        const cliente = await em.findOneOrFail(Cliente, { idCliente });
         await em.removeAndFlush(cliente);
         res.status(200).send({ message: 'cliente deleted' });
     }

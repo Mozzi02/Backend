@@ -54,7 +54,7 @@ async function update(req: Request, res: Response){
 async function remove(req: Request, res: Response){
   try {
     const idRol = Number.parseInt(req.params.idRol)
-    const rol = em.findOneOrFail(Rol, {idRol})
+    const rol = await em.findOneOrFail(Rol, {idRol})
     await em.removeAndFlush(rol)
     res.status(200).send({message: 'rol deleted'})
   } catch (error: any) {

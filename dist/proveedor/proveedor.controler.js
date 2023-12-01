@@ -46,7 +46,7 @@ async function update(req, res) {
 async function remove(req, res) {
     try {
         const idProveedor = Number.parseInt(req.params.idProveedor);
-        const proveedor = em.findOneOrFail(Proveedor, { idProveedor });
+        const proveedor = await em.findOneOrFail(Proveedor, { idProveedor });
         await em.removeAndFlush(proveedor);
         res.status(200).send({ message: 'proveedor deleted' });
     }

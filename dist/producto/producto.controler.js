@@ -1,12 +1,13 @@
 import { orm } from '../shared/db/orm.js';
 import { Producto } from './producto.entity.js';
+import { TipoProducto } from '../tipoProducto/tipoProducto.entity.js';
 const em = orm.em;
 function sanitizeProductoInput(req, res, next) {
     req.body.sanitizedInput = {
         idProducto: req.body.idProducto,
         descripcion: req.body.descripcion,
         precio: req.body.precio,
-        idTipo: req.body.idTipo,
+        tipoProducto: req.body.tipoProducto,
         stock: req.body.stock,
         imagen: req.body.imagen
     };
@@ -22,10 +23,16 @@ async function findAll(req, res) {
     try {
         const filter = {};
         if (req.params.descripcion) {
-            filter.descripcion = req.params.descripcion;
+            const descripcionParcial = req.params.descripcion;
+            filter.descripcion = { $like: `%${descripcionParcial}%` };
         }
         const productos = await em.find(Producto, filter, { populate: ['tipoProducto'] });
-        res.status(200).json({ message: 'found all productos', data: productos });
+        if (filter.descripcion) {
+            res.status(200).json({ message: 'found productos that match', data: productos });
+        }
+        else {
+            res.status(200).json({ message: 'found all productos', data: productos });
+        }
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -33,9 +40,12 @@ async function findAll(req, res) {
 }
 ;
 /*
-async function findSome(req: Request, res: Respones){
+async function findSome(req: Request, res: Response){
   try {
-    const productos = await em.find(Producto, {descripcion}, {populate: ['tipoProducto']})
+    console.log("Llega al findsome");
+    const descripcion = req.params.descripcion;
+
+    const productos = await em.find(Producto, {descripcion: {$like: `%${descripcion}`}}, {populate: ['tipoProducto']})
     res.status(200).json({message: 'found all productos that match', data: productos})
   } catch (error: any) {
     res.status(500).json({message: error.message})
@@ -54,7 +64,12 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const producto = em.create(Producto, req.body.sanitizedInput);
+        const productoData = req.body.sanitizedInput;
+        if (productoData.tipoProducto) {
+            const tipoExistente = await em.findOneOrFail(TipoProducto, productoData.tipoProducto.idTipo);
+            productoData.tipoProducto = tipoExistente;
+        }
+        const producto = em.create(Producto, productoData);
         await em.flush();
         res.status(201).json({ message: 'producto created', data: producto });
     }
@@ -79,7 +94,7 @@ async function update(req, res) {
 async function remove(req, res) {
     try {
         const idProducto = Number.parseInt(req.params.idProducto);
-        const producto = em.findOneOrFail(Producto, { idProducto });
+        const producto = await em.findOneOrFail(Producto, { idProducto });
         await em.removeAndFlush(producto);
         res.status(200).send({ message: 'producto deleted' });
     }

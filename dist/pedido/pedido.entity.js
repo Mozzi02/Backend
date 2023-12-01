@@ -12,17 +12,14 @@ import { Proveedor } from '../proveedor/proveedor.entity.js';
 import { Empleado } from '../empleado/empleado.entity.js';
 import { Producto } from '../producto/producto.entity.js';
 let Pedido = class Pedido {
-    constructor() {
-        this.fechaPedido = new Date();
-    }
 };
 __decorate([
     PrimaryKey(),
     __metadata("design:type", Number)
 ], Pedido.prototype, "idPedido", void 0);
 __decorate([
-    Property({ nullable: false, type: DateTimeType }),
-    __metadata("design:type", Object)
+    Property({ nullable: false, type: DateTimeType, columnType: 'datetime' }),
+    __metadata("design:type", DateTimeType)
 ], Pedido.prototype, "fechaPedido", void 0);
 __decorate([
     Property({ nullable: false, unsigned: true }),

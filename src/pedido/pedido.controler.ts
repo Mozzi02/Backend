@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Pedido } from './pedido.entity.js';
+import { Empleado } from '../empleado/empleado.entity.js';
+import { Proveedor } from '../proveedor/proveedor.entity.js';
+import { Producto } from '../producto/producto.entity.js';
 
 
 const em = orm.em;
@@ -29,10 +32,30 @@ async function findOne(req:Request, res:Response){
 
 async function add(req: Request, res:Response) {
   try {
-    const pedido = em.create(Pedido, req.body)
+    const pedidoData = req.body;
+
+    if (pedidoData.empleado){
+      const empleadoExistente = await em.findOneOrFail(Empleado, pedidoData.empleado.idEmpleado);
+        pedidoData.empleado = empleadoExistente;
+    }
+
+    if (pedidoData.proveedor){
+      const proveedorExistente = await em.findOneOrFail(Proveedor, pedidoData.proveedor.idProveedor);
+        pedidoData.proveedor = proveedorExistente;
+    }
+
+    if (pedidoData.producto){
+      const productoExistente = await em.findOneOrFail(Producto, pedidoData.producto.idProducto);
+        pedidoData.producto = productoExistente;
+    }
+
+    pedidoData.fechaPedido = new Date();
+
+    const pedido = em.create(Pedido, pedidoData)
     await em.flush()
     res.status(201).json({message: 'pedido created', data: pedido})
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({message: error.message})
   }
 };
@@ -54,7 +77,7 @@ async function update(req: Request, res: Response){
 async function remove(req: Request, res: Response){
   try {
     const idPedido = Number.parseInt(req.params.idPedido)
-    const pedido = em.findOneOrFail(Pedido, {idPedido})
+    const pedido = await em.findOneOrFail(Pedido, {idPedido})
     await em.removeAndFlush(pedido)
     res.status(200).send({message: 'pedido deleted'})
   } catch (error: any) {
