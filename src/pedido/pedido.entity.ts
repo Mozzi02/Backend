@@ -8,8 +8,8 @@ export class Pedido {
     @PrimaryKey()
     idPedido!: number
 
-    @Property({nullable: false, type: DateTimeType})
-    fechaPedido = new Date();
+    @Property({nullable: false, type: DateTimeType, columnType: 'datetime'})
+    fechaPedido!: DateTimeType
 
     @Property({nullable: false, unsigned: true})
     cantidad!: number

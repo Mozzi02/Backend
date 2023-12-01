@@ -1,5 +1,6 @@
 import { orm } from '../shared/db/orm.js';
 import { Empleado } from './empleado.entity.js';
+import { Rol } from '../rol/rol.entity.js';
 const em = orm.em;
 async function findAll(req, res) {
     try {
@@ -23,7 +24,14 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const empleado = em.create(Empleado, req.body);
+        const empleadoData = req.body;
+        if (empleadoData.rol) {
+            const rolExistente = await em.findOneOrFail(Rol, empleadoData.rol.idRol);
+            if (rolExistente) {
+                empleadoData.rol = rolExistente;
+            }
+        }
+        const empleado = em.create(Empleado, empleadoData);
         await em.flush();
         res.status(201).json({ message: 'empleado created', data: empleado });
     }
@@ -48,7 +56,7 @@ async function update(req, res) {
 async function remove(req, res) {
     try {
         const idEmpleado = Number.parseInt(req.params.idEmpleado);
-        const empleado = em.findOneOrFail(Empleado, { idEmpleado });
+        const empleado = await em.findOneOrFail(Empleado, { idEmpleado });
         await em.removeAndFlush(empleado);
         res.status(200).send({ message: 'empleado deleted' });
     }

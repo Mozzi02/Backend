@@ -33,7 +33,7 @@ async function add(req, res) {
 async function update(req, res) {
     try {
         const idCategoria = Number.parseInt(req.params.idCategoria);
-        const categoria = em.findOneOrFail(Categoria, { idCategoria });
+        const categoria = await em.findOneOrFail(Categoria, { idCategoria });
         em.assign(categoria, req.body);
         await em.flush();
         res.status(200).json({ message: 'categoria updated' });
@@ -46,8 +46,10 @@ async function update(req, res) {
 async function remove(req, res) {
     try {
         const idCategoria = Number.parseInt(req.params.idCategoria);
-        const categoria = em.findOneOrFail(Categoria, { idCategoria });
+        const categoria = await em.findOneOrFail(Categoria, { idCategoria });
+        console.log("lo encuentra", categoria);
         await em.removeAndFlush(categoria);
+        console.log("asd");
         res.status(200).send({ message: 'categoria deleted' });
     }
     catch (error) {
