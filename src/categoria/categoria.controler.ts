@@ -55,9 +55,7 @@ async function remove(req: Request, res: Response){
   try {
     const idCategoria = Number.parseInt(req.params.idCategoria)
     const categoria = await em.findOneOrFail(Categoria, {idCategoria})
-    console.log("lo encuentra", categoria);
     await em.removeAndFlush(categoria)
-    console.log("asd")
     res.status(200).send({message: 'categoria deleted'})
   } catch (error: any) {
     res.status(500).json({message: error.message})

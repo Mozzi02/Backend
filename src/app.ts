@@ -30,7 +30,7 @@ app.use('/api/roles', rolRouter)
 app.use('/api/proveedores', proveedorRouter)
 app.use('/api/clientes', clienteRoutes)
 app.use('/api/empleados', empleadoRoutes)
-app.use('/api/lineasdeventa', lineaDeVentaRoutes)
+app.use('/api/lineas', lineaDeVentaRoutes)
 app.use('/api/pedidos', pedidoRoutes)
 app.use('/api/ventas', ventaRoutes)
 

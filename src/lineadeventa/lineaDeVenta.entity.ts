@@ -8,7 +8,7 @@ export class LineaDeVenta {
     idLineaVenta!: number
 
     @Property({nullable: false, unsigned: true})
-    cantProducto!: number
+    cantidad!: number
 
     @ManyToOne(() => Producto, {nullable: false, unsigned: true})
     producto!: Rel<Producto>

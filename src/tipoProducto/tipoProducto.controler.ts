@@ -41,7 +41,7 @@ async function add(req: Request, res:Response) {
 async function update(req: Request, res: Response){
   try {
     const idTipo = Number.parseInt(req.params.idTipo)
-    const tipoProducto = em.findOneOrFail(TipoProducto, {idTipo})
+    const tipoProducto = await em.findOneOrFail(TipoProducto, {idTipo})
     em.assign(tipoProducto, req.body)
     await em.flush()
     res.status(200).json({message: 'tipo producto updated'})

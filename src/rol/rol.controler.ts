@@ -41,7 +41,7 @@ async function add(req: Request, res:Response) {
 async function update(req: Request, res: Response){
   try {
     const idRol = Number.parseInt(req.params.idRol)
-    const rol = em.findOneOrFail(Rol, {idRol})
+    const rol = await em.findOneOrFail(Rol, {idRol})
     em.assign(rol, req.body)
     await em.flush()
     res.status(200).json({message: 'rol updated'})
