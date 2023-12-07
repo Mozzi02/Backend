@@ -43,7 +43,7 @@ async function add(req, res) {
 async function update(req, res) {
     try {
         const idCliente = Number.parseInt(req.params.idCliente);
-        const cliente = em.findOneOrFail(Cliente, { idCliente });
+        const cliente = await em.findOneOrFail(Cliente, { idCliente });
         em.assign(cliente, req.body);
         await em.flush();
         res.status(200).json({ message: 'producto updated', data: cliente });

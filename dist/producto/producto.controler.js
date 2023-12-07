@@ -21,37 +21,24 @@ function sanitizeProductoInput(req, res, next) {
 ;
 async function findAll(req, res) {
     try {
-        const filter = {};
-        if (req.params.descripcion) {
-            const descripcionParcial = req.params.descripcion;
-            filter.descripcion = { $like: `%${descripcionParcial}%` };
-        }
-        const productos = await em.find(Producto, filter, { populate: ['tipoProducto'] });
-        if (filter.descripcion) {
-            res.status(200).json({ message: 'found productos that match', data: productos });
-        }
-        else {
-            res.status(200).json({ message: 'found all productos', data: productos });
-        }
+        const productos = await em.find(Producto, {}, { populate: ['tipoProducto'] });
+        res.status(200).json({ message: 'found all productos', data: productos });
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
 ;
-/*
-async function findSome(req: Request, res: Response){
-  try {
-    console.log("Llega al findsome");
-    const descripcion = req.params.descripcion;
-
-    const productos = await em.find(Producto, {descripcion: {$like: `%${descripcion}`}}, {populate: ['tipoProducto']})
-    res.status(200).json({message: 'found all productos that match', data: productos})
-  } catch (error: any) {
-    res.status(500).json({message: error.message})
-  }
+async function findSome(req, res) {
+    try {
+        const { descripcion } = req.params;
+        const productos = await em.find(Producto, { descripcion: { $like: `%${descripcion}%` } }, { populate: ['tipoProducto'] });
+        res.status(200).json({ message: 'found all productos that match', data: productos });
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 }
-*/
 async function findOne(req, res) {
     try {
         const idProducto = Number.parseInt(req.params.idProducto);
@@ -81,7 +68,7 @@ async function add(req, res) {
 async function update(req, res) {
     try {
         const idProducto = Number.parseInt(req.params.idProducto);
-        const producto = em.findOneOrFail(Producto, { idProducto });
+        const producto = await em.findOneOrFail(Producto, { idProducto });
         em.assign(producto, req.body.sanitizedInput);
         await em.flush();
         res.status(200).json({ message: 'producto updated', data: producto });
@@ -102,5 +89,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { sanitizeProductoInput, findAll, findOne, add, update, remove };
+export { sanitizeProductoInput, findAll, findSome, findOne, add, update, remove };
 //# sourceMappingURL=producto.controler.js.map
