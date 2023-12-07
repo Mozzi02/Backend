@@ -26,6 +26,16 @@ async function findOne(req:Request, res:Response){
   }
 }
 
+async function findSome(req: Request, res:Response){
+  try {
+    const {razonSocial} = req.params;
+
+    const proveedores = await em.find(Proveedor, {razonSocial: {$like: `%${razonSocial}%`}}, {})
+    res.status(200).json({message: 'found all proveedores that match', data: proveedores})
+  } catch (error: any) {
+    res.status(500).json({message: error.message})
+  }
+}
 
 async function add(req: Request, res:Response) {
   try {
@@ -41,7 +51,7 @@ async function add(req: Request, res:Response) {
 async function update(req: Request, res: Response){
   try {
     const idProveedor = Number.parseInt(req.params.idProveedor)
-    const proveedor = em.findOneOrFail(Proveedor, {idProveedor})
+    const proveedor = await em.findOneOrFail(Proveedor, {idProveedor})
     em.assign(proveedor, req.body)
     await em.flush()
     res.status(200).json({message: 'proveedor updated'})
@@ -63,4 +73,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {findAll, findOne, add, update, remove};
+export {findAll, findOne, findSome, add, update, remove};

@@ -27,38 +27,24 @@ function sanitizeProductoInput(req: Request, res: Response, next: NextFunction){
 
 async function findAll(req: Request, res: Response) {
   try {
-    const filter:{descripcion?:{$like: string}}={};
-
-    if(req.params.descripcion){
-      const descripcionParcial = req.params.descripcion;
-      filter.descripcion = {$like: `%${descripcionParcial}%`}
-    }
-
-    const productos = await em.find(Producto, filter, {populate: ['tipoProducto']})
-
-    if (filter.descripcion){
-      res.status(200).json({ message: 'found productos that match', data: productos });
-    } else {
-      res.status(200).json({message: 'found all productos', data: productos})
-    }
+    const productos = await em.find(Producto, {}, {populate: ['tipoProducto']});
+    res.status(200).json({message: 'found all productos', data: productos})
   } catch (error: any){
     res.status(500).json({message: error.message})
   }
 };
 
-/*
+
 async function findSome(req: Request, res: Response){
   try {
-    console.log("Llega al findsome");
-    const descripcion = req.params.descripcion;
+    const {descripcion} = req.params;
 
-    const productos = await em.find(Producto, {descripcion: {$like: `%${descripcion}`}}, {populate: ['tipoProducto']})
+    const productos = await em.find(Producto, {descripcion: {$like: `%${descripcion}%`}}, {populate: ['tipoProducto']})
     res.status(200).json({message: 'found all productos that match', data: productos})
   } catch (error: any) {
     res.status(500).json({message: error.message})
   }
 }
-*/
 
 async function findOne(req:Request, res:Response){
   try {
@@ -91,7 +77,7 @@ async function add(req: Request, res:Response) {
 async function update(req: Request, res: Response){
   try {
     const idProducto = Number.parseInt(req.params.idProducto)
-    const producto = em.findOneOrFail(Producto, {idProducto})
+    const producto = await em.findOneOrFail(Producto, {idProducto})
     em.assign(producto, req.body.sanitizedInput)
     await em.flush()
     res.status(200).json({message: 'producto updated', data: producto})
@@ -113,4 +99,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {sanitizeProductoInput, findAll, findOne, add, update, remove};
+export {sanitizeProductoInput, findAll, findSome, findOne, add, update, remove};

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Empleado } from './empleado.entity.js';
 import { Rol } from '../rol/rol.entity.js';
@@ -52,7 +52,7 @@ async function add(req: Request, res:Response) {
 async function update(req: Request, res: Response){
   try {
     const idEmpleado = Number.parseInt(req.params.idEmpleado)
-    const empleado = em.findOneOrFail(Empleado, {idEmpleado})
+    const empleado = await em.findOneOrFail(Empleado, {idEmpleado})
     em.assign(empleado, req.body)
     await em.flush()
     res.status(200).json({message: 'empleado updated', data: empleado})
