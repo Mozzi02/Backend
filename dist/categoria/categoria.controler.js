@@ -47,9 +47,7 @@ async function remove(req, res) {
     try {
         const idCategoria = Number.parseInt(req.params.idCategoria);
         const categoria = await em.findOneOrFail(Categoria, { idCategoria });
-        console.log("lo encuentra", categoria);
         await em.removeAndFlush(categoria);
-        console.log("asd");
         res.status(200).send({ message: 'categoria deleted' });
     }
     catch (error) {

@@ -33,7 +33,7 @@ async function add(req, res) {
 async function update(req, res) {
     try {
         const idTipo = Number.parseInt(req.params.idTipo);
-        const tipoProducto = em.findOneOrFail(TipoProducto, { idTipo });
+        const tipoProducto = await em.findOneOrFail(TipoProducto, { idTipo });
         em.assign(tipoProducto, req.body);
         await em.flush();
         res.status(200).json({ message: 'tipo producto updated' });

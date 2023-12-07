@@ -19,7 +19,7 @@ __decorate([
 __decorate([
     Property({ nullable: false, unsigned: true }),
     __metadata("design:type", Number)
-], LineaDeVenta.prototype, "cantProducto", void 0);
+], LineaDeVenta.prototype, "cantidad", void 0);
 __decorate([
     ManyToOne(() => Producto, { nullable: false, unsigned: true }),
     __metadata("design:type", Object)

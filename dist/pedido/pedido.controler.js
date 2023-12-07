@@ -45,16 +45,18 @@ async function add(req, res) {
         res.status(201).json({ message: 'pedido created', data: pedido });
     }
     catch (error) {
-        console.error(error);
         res.status(500).json({ message: error.message });
     }
 }
 ;
 async function update(req, res) {
     try {
+        const pedidoData = req.body;
         const idPedido = Number.parseInt(req.params.idPedido);
-        const pedido = em.findOneOrFail(Pedido, { idPedido });
-        em.assign(pedido, req.body);
+        const pedido = await em.findOneOrFail(Pedido, { idPedido });
+        const fechaPedido = new Date(pedidoData.fechaPedido);
+        pedidoData.fechaPedido = fechaPedido;
+        em.assign(pedido, pedidoData);
         await em.flush();
         res.status(200).json({ message: 'pedido updated', data: pedido });
     }

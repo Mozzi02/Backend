@@ -43,7 +43,7 @@ async function add(req, res) {
 async function update(req, res) {
     try {
         const idEmpleado = Number.parseInt(req.params.idEmpleado);
-        const empleado = em.findOneOrFail(Empleado, { idEmpleado });
+        const empleado = await em.findOneOrFail(Empleado, { idEmpleado });
         em.assign(empleado, req.body);
         await em.flush();
         res.status(200).json({ message: 'empleado updated', data: empleado });

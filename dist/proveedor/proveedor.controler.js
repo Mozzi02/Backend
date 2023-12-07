@@ -20,6 +20,16 @@ async function findOne(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+async function findSome(req, res) {
+    try {
+        const { razonSocial } = req.params;
+        const proveedores = await em.find(Proveedor, { razonSocial: { $like: `%${razonSocial}%` } }, {});
+        res.status(200).json({ message: 'found all proveedores that match', data: proveedores });
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 async function add(req, res) {
     try {
         const proveedor = em.create(Proveedor, req.body);
@@ -33,7 +43,7 @@ async function add(req, res) {
 async function update(req, res) {
     try {
         const idProveedor = Number.parseInt(req.params.idProveedor);
-        const proveedor = em.findOneOrFail(Proveedor, { idProveedor });
+        const proveedor = await em.findOneOrFail(Proveedor, { idProveedor });
         em.assign(proveedor, req.body);
         await em.flush();
         res.status(200).json({ message: 'proveedor updated' });
@@ -54,5 +64,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { findAll, findOne, add, update, remove };
+export { findAll, findOne, findSome, add, update, remove };
 //# sourceMappingURL=proveedor.controler.js.map
