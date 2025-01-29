@@ -14,6 +14,9 @@ export class Pedido {
     @Property({nullable: false, unsigned: true})
     cantidad!: number
 
+    @Property({nullable: false, unsigned: true})
+    estado!: string
+
     @ManyToOne(() => Proveedor, {nullable: false, unsigned: true})
     proveedor!: Rel<Proveedor>
 

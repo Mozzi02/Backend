@@ -26,6 +26,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Pedido.prototype, "cantidad", void 0);
 __decorate([
+    Property({ nullable: false, unsigned: true }),
+    __metadata("design:type", String)
+], Pedido.prototype, "estado", void 0);
+__decorate([
     ManyToOne(() => Proveedor, { nullable: false, unsigned: true }),
     __metadata("design:type", Object)
 ], Pedido.prototype, "proveedor", void 0);
