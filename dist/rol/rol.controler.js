@@ -1,6 +1,19 @@
 import { orm } from '../shared/db/orm.js';
 import { Rol } from './rol.entity.js';
 const em = orm.em;
+function sanitizeRolInput(req, res, next) {
+    req.body.sanitizedInput = {
+        idRol: req.body.idRol,
+        descripcion: req.body.descripcion
+    };
+    Object.keys(req.body.sanitizedInput).forEach(key => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key];
+        }
+    });
+    next();
+}
+;
 async function findAll(req, res) {
     try {
         const roles = await em.find(Rol, {});
@@ -22,7 +35,8 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const rol = em.create(Rol, req.body);
+        const rolData = req.body.sanitizedInput;
+        const rol = em.create(Rol, rolData);
         await em.flush();
         res.status(201).json({ message: 'rol created', data: rol });
     }
@@ -32,11 +46,12 @@ async function add(req, res) {
 }
 async function update(req, res) {
     try {
+        const rolData = req.body.sanitizedInput;
         const idRol = Number.parseInt(req.params.idRol);
         const rol = await em.findOneOrFail(Rol, { idRol });
-        em.assign(rol, req.body);
+        em.assign(rol, rolData);
         await em.flush();
-        res.status(200).json({ message: 'rol updated' });
+        res.status(200).json({ message: 'rol updated', data: rol });
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -54,5 +69,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { findAll, findOne, add, update, remove };
+export { sanitizeRolInput, findAll, findOne, add, update, remove };
 //# sourceMappingURL=rol.controler.js.map

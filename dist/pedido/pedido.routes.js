@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { findAll, findOne, add, update, remove } from './pedido.controler.js';
+import { sanitizePedidoInput, findAll, findOne, add, update, remove } from './pedido.controler.js';
 export const pedidoRoutes = Router();
 pedidoRoutes.get('/', findAll);
 pedidoRoutes.get('/:idPedido', findOne);
-pedidoRoutes.post('/', add);
-pedidoRoutes.put('/:idPedido', update);
-pedidoRoutes.patch('/:idPedido', update);
+pedidoRoutes.post('/', sanitizePedidoInput, add);
+pedidoRoutes.put('/:idPedido', sanitizePedidoInput, update);
+pedidoRoutes.patch('/:idPedido', sanitizePedidoInput, update);
 pedidoRoutes.delete('/:idPedido', remove);
 //# sourceMappingURL=pedido.routes.js.map

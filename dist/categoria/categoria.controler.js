@@ -1,6 +1,19 @@
 import { orm } from '../shared/db/orm.js';
 import { Categoria } from './categoria.entity.js';
 const em = orm.em;
+function sanitizeCategoriaInput(req, res, next) {
+    req.body.sanitizedInput = {
+        idCategoria: req.body.idCategoria,
+        descripcion: req.body.descripcion,
+    };
+    Object.keys(req.body.sanitizedInput).forEach(key => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key];
+        }
+    });
+    next();
+}
+;
 async function findAll(req, res) {
     try {
         const categorias = await em.find(Categoria, {});
@@ -22,7 +35,8 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const categoria = em.create(Categoria, req.body);
+        const categoriaData = req.body.sanitizedInput;
+        const categoria = em.create(Categoria, categoriaData);
         await em.flush();
         res.status(201).json({ message: 'categoria created', data: categoria });
     }
@@ -32,11 +46,12 @@ async function add(req, res) {
 }
 async function update(req, res) {
     try {
+        const categoriaData = req.body.sanitizedInput;
         const idCategoria = Number.parseInt(req.params.idCategoria);
         const categoria = await em.findOneOrFail(Categoria, { idCategoria });
-        em.assign(categoria, req.body);
+        em.assign(categoria, categoriaData);
         await em.flush();
-        res.status(200).json({ message: 'categoria updated' });
+        res.status(200).json({ message: 'categoria updated', data: categoria });
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -54,5 +69,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { findAll, findOne, add, update, remove };
+export { sanitizeCategoriaInput, findAll, findOne, add, update, remove };
 //# sourceMappingURL=categoria.controler.js.map

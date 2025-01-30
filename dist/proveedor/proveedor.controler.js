@@ -1,6 +1,22 @@
 import { orm } from '../shared/db/orm.js';
 import { Proveedor } from './proveedor.entity.js';
 const em = orm.em;
+function sanitizeProveedorInput(req, res, next) {
+    req.body.sanitizedInput = {
+        idProveedor: req.body.idProveedor,
+        cuit: req.body.cuit,
+        razonSocial: req.body.razonSocial,
+        telefono: req.body.telefono,
+        email: req.body.email
+    };
+    Object.keys(req.body.sanitizedInput).forEach(key => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key];
+        }
+    });
+    next();
+}
+;
 async function findAll(req, res) {
     try {
         const proveedores = await em.find(Proveedor, {});
@@ -32,7 +48,8 @@ async function findSome(req, res) {
 }
 async function add(req, res) {
     try {
-        const proveedor = em.create(Proveedor, req.body);
+        const proveedorData = req.body.sanitizedInput;
+        const proveedor = em.create(Proveedor, proveedorData);
         await em.flush();
         res.status(201).json({ message: 'proveedor created', data: proveedor });
     }
@@ -42,11 +59,12 @@ async function add(req, res) {
 }
 async function update(req, res) {
     try {
+        const proveedorData = req.body.sanitizedInput;
         const idProveedor = Number.parseInt(req.params.idProveedor);
         const proveedor = await em.findOneOrFail(Proveedor, { idProveedor });
-        em.assign(proveedor, req.body);
+        em.assign(proveedor, proveedorData);
         await em.flush();
-        res.status(200).json({ message: 'proveedor updated' });
+        res.status(200).json({ message: 'proveedor updated', data: proveedor });
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -64,5 +82,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { findAll, findOne, findSome, add, update, remove };
+export { sanitizeProveedorInput, findAll, findOne, findSome, add, update, remove };
 //# sourceMappingURL=proveedor.controler.js.map

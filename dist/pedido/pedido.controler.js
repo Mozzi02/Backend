@@ -4,6 +4,24 @@ import { Empleado } from '../empleado/empleado.entity.js';
 import { Proveedor } from '../proveedor/proveedor.entity.js';
 import { Producto } from '../producto/producto.entity.js';
 const em = orm.em;
+function sanitizePedidoInput(req, res, next) {
+    req.body.sanitizedInput = {
+        idPedido: req.body.idPedido,
+        fechaPedido: req.body.fechaPedido,
+        cantidad: req.body.cantidad,
+        estado: req.body.estado,
+        proveedor: req.body.proveedor,
+        empleado: req.body.empleado,
+        producto: req.body.producto
+    };
+    Object.keys(req.body.sanitizedInput).forEach(key => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key];
+        }
+    });
+    next();
+}
+;
 async function findAll(req, res) {
     try {
         const pedidos = await em.find(Pedido, {}, { populate: ['proveedor', 'empleado', 'producto'] });
@@ -26,7 +44,7 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const pedidoData = req.body;
+        const pedidoData = req.body.sanitizedInput;
         if (pedidoData.empleado) {
             const empleadoExistente = await em.findOneOrFail(Empleado, pedidoData.empleado.idEmpleado);
             pedidoData.empleado = empleadoExistente;
@@ -51,7 +69,7 @@ async function add(req, res) {
 ;
 async function update(req, res) {
     try {
-        const pedidoData = req.body;
+        const pedidoData = req.body.sanitizedInput;
         const idPedido = Number.parseInt(req.params.idPedido);
         const pedido = await em.findOneOrFail(Pedido, { idPedido });
         const fechaPedido = new Date(pedidoData.fechaPedido);
@@ -76,5 +94,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { findAll, findOne, add, update, remove };
+export { sanitizePedidoInput, findAll, findOne, add, update, remove };
 //# sourceMappingURL=pedido.controler.js.map

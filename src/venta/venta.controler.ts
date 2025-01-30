@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Venta } from './venta.entity.js';
 import { Cliente } from '../cliente/cliente.entity.js';
@@ -7,6 +7,20 @@ import { Empleado } from '../empleado/empleado.entity.js';
 
 const em = orm.em;
 
+function sanitizeVentaInput(req: Request, res: Response, next: NextFunction){
+  req.body.sanitizedInput = {
+    idVenta: req.body.idVenta,
+    fechaVenta: req.body.fechaVenta,
+    cliente: req.body.cliente,
+    empleado: req.body.empleado
+  }
+  Object.keys(req.body.sanitizedInput).forEach(key => {
+    if(req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  })
+  next();
+};
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -31,7 +45,7 @@ async function findOne(req:Request, res:Response){
 
 async function add(req: Request, res:Response) {
   try {
-    const ventaData = req.body;
+    const ventaData = req.body.sanitizedInput;
 
     if(ventaData.cliente){
       const clienteExistente = await em.findOneOrFail(Cliente, ventaData.cliente.idCliente);
@@ -56,7 +70,7 @@ async function add(req: Request, res:Response) {
 
 async function update(req: Request, res: Response){
   try {
-    const ventaData = req.body;
+    const ventaData = req.body.sanitizedInput;
 
     if(ventaData.cliente){
       const clienteExistente = await em.findOneOrFail(Cliente, ventaData.cliente.idCliente);
@@ -101,4 +115,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {findAll, findOne, add, update, remove};
+export {sanitizeVentaInput, findAll, findOne, add, update, remove};

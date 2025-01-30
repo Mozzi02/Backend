@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Pedido } from './pedido.entity.js';
 import { Empleado } from '../empleado/empleado.entity.js';
@@ -8,6 +8,23 @@ import { Producto } from '../producto/producto.entity.js';
 
 const em = orm.em;
 
+function sanitizePedidoInput(req: Request, res: Response, next: NextFunction){
+  req.body.sanitizedInput = {
+    idPedido: req.body.idPedido,
+    fechaPedido: req.body.fechaPedido,
+    cantidad: req.body.cantidad,
+    estado: req.body.estado,
+    proveedor: req.body.proveedor,
+    empleado: req.body.empleado,
+    producto: req.body.producto
+  }
+  Object.keys(req.body.sanitizedInput).forEach(key => {
+    if(req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  })
+  next();
+};
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -32,7 +49,7 @@ async function findOne(req:Request, res:Response){
 
 async function add(req: Request, res:Response) {
   try {
-    const pedidoData = req.body;
+    const pedidoData = req.body.sanitizedInput;
 
     if (pedidoData.empleado){
       const empleadoExistente = await em.findOneOrFail(Empleado, pedidoData.empleado.idEmpleado);
@@ -62,7 +79,7 @@ async function add(req: Request, res:Response) {
 
 async function update(req: Request, res: Response){
   try {
-    const pedidoData = req.body;
+    const pedidoData = req.body.sanitizedInput;
 
     const idPedido = Number.parseInt(req.params.idPedido)
     const pedido = await em.findOneOrFail(Pedido, {idPedido})
@@ -92,4 +109,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {findAll, findOne, add, update, remove};
+export {sanitizePedidoInput, findAll, findOne, add, update, remove};

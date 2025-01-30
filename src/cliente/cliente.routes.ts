@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { findAll, findOne, add, update, remove } from './cliente.controler.js';
+import { sanitizeClienteInput, findAll, findOne, add, update, remove } from './cliente.controler.js';
 
 
 export const clienteRoutes = Router();
@@ -7,7 +7,7 @@ export const clienteRoutes = Router();
 
 clienteRoutes.get('/', findAll);
 clienteRoutes.get('/:idCliente', findOne);
-clienteRoutes.post('/', add);
-clienteRoutes.put('/:idCliente', update);
-clienteRoutes.patch('/:idCliente', update);
+clienteRoutes.post('/', sanitizeClienteInput, add);
+clienteRoutes.put('/:idCliente', sanitizeClienteInput, update);
+clienteRoutes.patch('/:idCliente', sanitizeClienteInput, update);
 clienteRoutes.delete('/:idCliente', remove);

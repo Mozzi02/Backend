@@ -2,6 +2,26 @@ import { orm } from '../shared/db/orm.js';
 import { Empleado } from './empleado.entity.js';
 import { Rol } from '../rol/rol.entity.js';
 const em = orm.em;
+function sanitizeEmpleadoInput(req, res, next) {
+    req.body.sanitizedInput = {
+        idEmpleado: req.body.idEmpleado,
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
+        telefono: req.body.telefono,
+        email: req.body.email,
+        direccion: req.body.direccion,
+        dni: req.body.dni,
+        rol: req.body.rol,
+        password: req.body.password
+    };
+    Object.keys(req.body.sanitizedInput).forEach(key => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key];
+        }
+    });
+    next();
+}
+;
 async function findAll(req, res) {
     try {
         const empleados = await em.find(Empleado, {}, { populate: ['rol'] });
@@ -24,7 +44,7 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const empleadoData = req.body;
+        const empleadoData = req.body.sanitizedInput;
         if (empleadoData.rol) {
             const rolExistente = await em.findOneOrFail(Rol, empleadoData.rol.idRol);
             if (rolExistente) {
@@ -42,9 +62,10 @@ async function add(req, res) {
 ;
 async function update(req, res) {
     try {
+        const empleadoData = req.body.sanitizedInput;
         const idEmpleado = Number.parseInt(req.params.idEmpleado);
         const empleado = await em.findOneOrFail(Empleado, { idEmpleado });
-        em.assign(empleado, req.body);
+        em.assign(empleado, empleadoData);
         await em.flush();
         res.status(200).json({ message: 'empleado updated', data: empleado });
     }
@@ -64,5 +85,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { findAll, findOne, add, update, remove };
+export { sanitizeEmpleadoInput, findAll, findOne, add, update, remove };
 //# sourceMappingURL=empleado.controler.js.map

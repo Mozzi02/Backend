@@ -6,6 +6,24 @@ import { Categoria } from '../categoria/categoria.entity.js';
 
 const em = orm.em;
 
+function sanitizeClienteInput(req: Request, res: Response, next: NextFunction){
+  req.body.sanitizedInput = {
+    idCliente: req.body.idCliente,
+    nombre: req.body.nombre,
+    apellido: req.body.apellido,
+    telefono: req.body.telefono,
+    email: req.body.email,
+    direccion: req.body.direccion,
+    cuit: req.body.cuit,
+    categoria: req.body.categoria
+  }
+  Object.keys(req.body.sanitizedInput).forEach(key => {
+    if(req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  })
+  next();
+};
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -30,7 +48,7 @@ async function findOne(req:Request, res:Response){
 
 async function add(req: Request, res:Response) {
   try {
-    const clienteData = req.body;
+    const clienteData = req.body.sanitizedInput;
 
     if (clienteData.categoria){
       const categoriaExistente = await em.findOneOrFail(Categoria, clienteData.categoria.idCategoria);
@@ -51,11 +69,12 @@ async function add(req: Request, res:Response) {
 
 async function update(req: Request, res: Response){
   try {
+    const clienteData = req.body.sanitizedInput;
     const idCliente = Number.parseInt(req.params.idCliente)
     const cliente = await em.findOneOrFail(Cliente, {idCliente})
-    em.assign(cliente, req.body)
+    em.assign(cliente, clienteData)
     await em.flush()
-    res.status(200).json({message: 'producto updated', data: cliente})
+    res.status(200).json({message: 'cliente updated', data: cliente})
   } catch (error: any) {
     res.status(500).json({message: error.message})
   }
@@ -74,4 +93,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {findAll, findOne, add, update, remove};
+export {sanitizeClienteInput, findAll, findOne, add, update, remove};

@@ -1,10 +1,22 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Rol } from './rol.entity.js';
 
 
 const em = orm.em;
 
+function sanitizeRolInput(req: Request, res: Response, next: NextFunction){
+  req.body.sanitizedInput = {
+    idRol: req.body.idRol,
+    descripcion: req.body.descripcion
+  }
+  Object.keys(req.body.sanitizedInput).forEach(key => {
+    if(req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  })
+  next();
+};
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -29,7 +41,8 @@ async function findOne(req:Request, res:Response){
 
 async function add(req: Request, res:Response) {
   try {
-    const rol = em.create(Rol, req.body)
+    const rolData = req.body.sanitizedInput;
+    const rol = em.create(Rol, rolData)
     await em.flush()
     res.status(201).json({message: 'rol created', data: rol})
   } catch (error: any) {
@@ -40,11 +53,12 @@ async function add(req: Request, res:Response) {
 
 async function update(req: Request, res: Response){
   try {
+    const rolData = req.body.sanitizedInput;
     const idRol = Number.parseInt(req.params.idRol)
     const rol = await em.findOneOrFail(Rol, {idRol})
-    em.assign(rol, req.body)
+    em.assign(rol, rolData)
     await em.flush()
-    res.status(200).json({message: 'rol updated'})
+    res.status(200).json({message: 'rol updated', data: rol})
   } catch (error: any) {
     res.status(500).json({message: error.message})
   }
@@ -63,4 +77,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {findAll, findOne, add, update, remove};
+export {sanitizeRolInput, findAll, findOne, add, update, remove};

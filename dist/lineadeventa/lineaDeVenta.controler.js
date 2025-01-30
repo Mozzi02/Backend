@@ -3,6 +3,21 @@ import { LineaDeVenta } from './lineaDeVenta.entity.js';
 import { Producto } from '../producto/producto.entity.js';
 import { Venta } from '../venta/venta.entity.js';
 const em = orm.em;
+function sanitizeLineaInput(req, res, next) {
+    req.body.sanitizedInput = {
+        idLineaVenta: req.body.idLineaVenta,
+        cantidad: req.body.cantidad,
+        producto: req.body.producto,
+        venta: req.body.venta
+    };
+    Object.keys(req.body.sanitizedInput).forEach(key => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key];
+        }
+    });
+    next();
+}
+;
 async function findAll(req, res) {
     try {
         const lineas = await em.find(LineaDeVenta, {}, { populate: ['venta', 'producto'] });
@@ -35,7 +50,7 @@ async function findSome(req, res) {
 }
 async function add(req, res) {
     try {
-        const lineaData = req.body;
+        const lineaData = req.body.sanitizedInput;
         if (lineaData.producto) {
             const productoExistente = await em.findOneOrFail(Producto, lineaData.producto.idProducto);
             lineaData.producto = productoExistente;
@@ -55,7 +70,7 @@ async function add(req, res) {
 ;
 async function update(req, res) {
     try {
-        const lineaData = req.body;
+        const lineaData = req.body.sanitizedInput;
         if (lineaData.producto) {
             const productoExistente = await em.findOneOrFail(Producto, lineaData.producto.idProducto);
             lineaData.producto = productoExistente;
@@ -86,5 +101,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { findAll, findOne, findSome, add, update, remove };
+export { sanitizeLineaInput, findAll, findOne, findSome, add, update, remove };
 //# sourceMappingURL=lineaDeVenta.controler.js.map

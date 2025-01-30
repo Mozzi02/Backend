@@ -1,10 +1,22 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Categoria } from './categoria.entity.js';
 
 
 const em = orm.em;
 
+function sanitizeCategoriaInput(req: Request, res: Response, next: NextFunction){
+  req.body.sanitizedInput = {
+    idCategoria: req.body.idCategoria,
+    descripcion: req.body.descripcion,
+  }
+  Object.keys(req.body.sanitizedInput).forEach(key => {
+    if(req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  })
+  next();
+};
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -29,7 +41,8 @@ async function findOne(req:Request, res:Response){
 
 async function add(req: Request, res:Response) {
   try {
-    const categoria = em.create(Categoria, req.body)
+    const categoriaData = req.body.sanitizedInput;
+    const categoria = em.create(Categoria, categoriaData)
     await em.flush()
     res.status(201).json({message: 'categoria created', data: categoria})
   } catch (error: any) {
@@ -40,11 +53,12 @@ async function add(req: Request, res:Response) {
 
 async function update(req: Request, res: Response){
   try {
+    const categoriaData = req.body.sanitizedInput;
     const idCategoria = Number.parseInt(req.params.idCategoria)
     const categoria = await em.findOneOrFail(Categoria, {idCategoria})
-    em.assign(categoria, req.body)
+    em.assign(categoria, categoriaData)
     await em.flush()
-    res.status(200).json({message: 'categoria updated'})
+    res.status(200).json({message: 'categoria updated', data: categoria})
   } catch (error: any) {
     res.status(500).json({message: error.message})
   }
@@ -63,4 +77,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {findAll, findOne, add, update, remove};
+export {sanitizeCategoriaInput, findAll, findOne, add, update, remove};

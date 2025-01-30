@@ -1,6 +1,19 @@
 import { orm } from '../shared/db/orm.js';
 import { TipoProducto } from './tipoProducto.entity.js';
 const em = orm.em;
+function sanitizeTipoProductoInput(req, res, next) {
+    req.body.sanitizedInput = {
+        idTipo: req.body.idTipo,
+        descripcion: req.body.descripcion
+    };
+    Object.keys(req.body.sanitizedInput).forEach(key => {
+        if (req.body.sanitizedInput[key] === undefined) {
+            delete req.body.sanitizedInput[key];
+        }
+    });
+    next();
+}
+;
 async function findAll(req, res) {
     try {
         const tiposProducto = await em.find(TipoProducto, {});
@@ -22,7 +35,8 @@ async function findOne(req, res) {
 }
 async function add(req, res) {
     try {
-        const tipoProducto = em.create(TipoProducto, req.body);
+        const tipoData = req.body.sanitizedInput;
+        const tipoProducto = em.create(TipoProducto, tipoData);
         await em.flush();
         res.status(201).json({ message: 'tipo producto created', data: tipoProducto });
     }
@@ -32,9 +46,10 @@ async function add(req, res) {
 }
 async function update(req, res) {
     try {
+        const tipoData = req.body.sanitizedInput;
         const idTipo = Number.parseInt(req.params.idTipo);
         const tipoProducto = await em.findOneOrFail(TipoProducto, { idTipo });
-        em.assign(tipoProducto, req.body);
+        em.assign(tipoProducto, tipoData);
         await em.flush();
         res.status(200).json({ message: 'tipo producto updated' });
     }
@@ -54,5 +69,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { findAll, findOne, add, update, remove };
+export { sanitizeTipoProductoInput, findAll, findOne, add, update, remove };
 //# sourceMappingURL=tipoProducto.controler.js.map

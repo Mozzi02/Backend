@@ -1,10 +1,22 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { TipoProducto } from './tipoProducto.entity.js';
 
 
 const em = orm.em;
 
+function sanitizeTipoProductoInput(req: Request, res: Response, next: NextFunction){
+  req.body.sanitizedInput = {
+    idTipo: req.body.idTipo,
+    descripcion: req.body.descripcion
+  }
+  Object.keys(req.body.sanitizedInput).forEach(key => {
+    if(req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  })
+  next();
+};
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -29,7 +41,8 @@ async function findOne(req:Request, res:Response){
 
 async function add(req: Request, res:Response) {
   try {
-    const tipoProducto = em.create(TipoProducto, req.body)
+    const tipoData = req.body.sanitizedInput;
+    const tipoProducto = em.create(TipoProducto, tipoData)
     await em.flush()
     res.status(201).json({message: 'tipo producto created', data: tipoProducto})
   } catch (error: any) {
@@ -40,9 +53,10 @@ async function add(req: Request, res:Response) {
 
 async function update(req: Request, res: Response){
   try {
+    const tipoData = req.body.sanitizedInput;
     const idTipo = Number.parseInt(req.params.idTipo)
     const tipoProducto = await em.findOneOrFail(TipoProducto, {idTipo})
-    em.assign(tipoProducto, req.body)
+    em.assign(tipoProducto, tipoData)
     await em.flush()
     res.status(200).json({message: 'tipo producto updated'})
   } catch (error: any) {
@@ -63,4 +77,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {findAll, findOne, add, update, remove};
+export {sanitizeTipoProductoInput, findAll, findOne, add, update, remove};

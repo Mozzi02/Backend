@@ -1,10 +1,25 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { Proveedor } from './proveedor.entity.js';
 
 
 const em = orm.em;
 
+function sanitizeProveedorInput(req: Request, res: Response, next: NextFunction){
+  req.body.sanitizedInput = {
+    idProveedor: req.body.idProveedor,
+    cuit: req.body.cuit,
+    razonSocial: req.body.razonSocial,
+    telefono: req.body.telefono,
+    email: req.body.email
+  }
+  Object.keys(req.body.sanitizedInput).forEach(key => {
+    if(req.body.sanitizedInput[key] === undefined) {
+      delete req.body.sanitizedInput[key];
+    }
+  })
+  next();
+};
 
 async function findAll(req: Request, res: Response) {
   try {
@@ -39,7 +54,8 @@ async function findSome(req: Request, res:Response){
 
 async function add(req: Request, res:Response) {
   try {
-    const proveedor = em.create(Proveedor, req.body)
+    const proveedorData = req.body.sanitizedInput;
+    const proveedor = em.create(Proveedor, proveedorData)
     await em.flush()
     res.status(201).json({message: 'proveedor created', data: proveedor})
   } catch (error: any) {
@@ -50,11 +66,12 @@ async function add(req: Request, res:Response) {
 
 async function update(req: Request, res: Response){
   try {
+    const proveedorData = req.body.sanitizedInput;
     const idProveedor = Number.parseInt(req.params.idProveedor)
     const proveedor = await em.findOneOrFail(Proveedor, {idProveedor})
-    em.assign(proveedor, req.body)
+    em.assign(proveedor, proveedorData)
     await em.flush()
-    res.status(200).json({message: 'proveedor updated'})
+    res.status(200).json({message: 'proveedor updated', data: proveedor})
   } catch (error: any) {
     res.status(500).json({message: error.message})
   }
@@ -73,4 +90,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {findAll, findOne, findSome, add, update, remove};
+export {sanitizeProveedorInput, findAll, findOne, findSome, add, update, remove};

@@ -67,9 +67,10 @@ async function add(req, res) {
 ;
 async function update(req, res) {
     try {
+        const productoData = req.body.sanitizedInput;
         const idProducto = Number.parseInt(req.params.idProducto);
         const producto = await em.findOneOrFail(Producto, { idProducto });
-        em.assign(producto, req.body.sanitizedInput);
+        em.assign(producto, productoData);
         await em.flush();
         res.status(200).json({ message: 'producto updated', data: producto });
     }
