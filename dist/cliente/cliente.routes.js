@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { sanitizeClienteInput, findAll, findOne, add, update, remove } from './cliente.controler.js';
+import { verifyToken } from '../auth/auth.controler.js';
 export const clienteRoutes = Router();
-clienteRoutes.get('/', findAll);
-clienteRoutes.get('/:idCliente', findOne);
-clienteRoutes.post('/', sanitizeClienteInput, add);
-clienteRoutes.put('/:idCliente', sanitizeClienteInput, update);
-clienteRoutes.patch('/:idCliente', sanitizeClienteInput, update);
-clienteRoutes.delete('/:idCliente', remove);
+clienteRoutes.get('/', verifyToken, findAll);
+clienteRoutes.get('/:idCliente', verifyToken, findOne);
+clienteRoutes.post('/', sanitizeClienteInput, verifyToken, add);
+clienteRoutes.put('/:idCliente', sanitizeClienteInput, verifyToken, update);
+clienteRoutes.patch('/:idCliente', sanitizeClienteInput, verifyToken, update);
+clienteRoutes.delete('/:idCliente', verifyToken, remove);
 //# sourceMappingURL=cliente.routes.js.map

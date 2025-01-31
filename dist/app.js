@@ -13,6 +13,7 @@ import { lineaDeVentaRoutes } from './lineadeventa/lineaDeVenta.routes.js';
 import { pedidoRoutes } from './pedido/pedido.routes.js';
 import { ventaRoutes } from './venta/venta.routes.js';
 import cors from 'cors';
+import { authRoutes } from './auth/auth.routes.js';
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -29,6 +30,7 @@ app.use('/api/empleados', empleadoRoutes);
 app.use('/api/lineas', lineaDeVentaRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/ventas', ventaRoutes);
+app.use('/api/login', authRoutes);
 app.use((_, res) => {
     res.status(404).send({ message: 'Resource not found' });
 });
