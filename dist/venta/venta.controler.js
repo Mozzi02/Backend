@@ -38,6 +38,16 @@ async function findOne(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+async function findSome(req, res) {
+    try {
+        const { year } = req.params;
+        const ventas = await em.find(Venta, { fechaVenta: { $like: `%${year}%` } }, { populate: ['cliente', 'empleado'] });
+        res.status(200).json({ message: 'found all ventas that match', data: ventas });
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 async function add(req, res) {
     try {
         const ventaData = req.body.sanitizedInput;
@@ -97,5 +107,5 @@ async function remove(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-export { sanitizeVentaInput, findAll, findOne, add, update, remove };
+export { sanitizeVentaInput, findAll, findOne, add, update, remove, findSome };
 //# sourceMappingURL=venta.controler.js.map

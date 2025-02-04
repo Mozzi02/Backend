@@ -42,6 +42,16 @@ async function findOne(req:Request, res:Response){
   }
 }
 
+async function findSome(req: Request, res: Response){
+  try {
+    const {year} = req.params;
+
+    const ventas = await em.find(Venta, {fechaVenta: {$like: `%${year}%`}}, {populate: ['cliente', 'empleado']})
+    res.status(200).json({message: 'found all ventas that match', data: ventas})
+  } catch (error: any) {
+    res.status(500).json({message: error.message})
+  }
+}
 
 async function add(req: Request, res:Response) {
   try {
@@ -115,4 +125,4 @@ async function remove(req: Request, res: Response){
 }
 
 
-export {sanitizeVentaInput, findAll, findOne, add, update, remove};
+export {sanitizeVentaInput, findAll, findOne, add, update, remove, findSome};
