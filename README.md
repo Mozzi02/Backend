@@ -23,10 +23,10 @@ Gestion de Stock para tienda de indumentaria
 
 ## IMAGEN DEL MODELO:
 
-![image](https://github.com/Mozzi02/TrabajoPractico-DSW-Grau-Mozzi-Aimar/assets/128518865/8d062f17-546a-40cc-b0c5-6ca3bd05aeb9)
+![Imagen del modelo](https://imgur.com/jM9oXpP)
 
 
-https://drive.google.com/file/d/1m_fRjhLe9l6uyDgpRPfrgdzHzN00MFXC/view?usp=sharing 
+https://drive.google.com/file/d/1hVD9TMT7StWMk5lK70eoJ_uyGX5cF6Yg/view?usp=sharing 
 
 ## ALCANCE FUNCIONAL
 
