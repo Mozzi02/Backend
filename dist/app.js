@@ -17,9 +17,15 @@ import { authRoutes } from './auth/auth.routes.js';
 import { PORT } from './config.js';
 import swaggerUI from 'swagger-ui-express';
 import specs from './swagger/swagger.js';
+import dotenv from 'dotenv';
+const ENV = process.env.NODE_ENV || "development";
+dotenv.config({ path: `.env.${ENV}` });
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+}));
 app.use((req, res, next) => {
     RequestContext.create(orm.em, next);
 });

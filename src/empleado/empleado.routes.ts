@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { findAll, findOne, add, update, remove, sanitizeEmpleadoInput } from './empleado.controler.js';
-import { sanitizeAuthInput, verifyToken, isAdmin } from '../auth/auth.controler.js';
+import { verifyToken, isAdmin } from '../auth/auth.controler.js';
 
 
 export const empleadoRoutes = Router();
@@ -119,7 +119,116 @@ empleadoRoutes.get('/', verifyToken, isAdmin, findAll);
 empleadoRoutes.get('/:idEmpleado', verifyToken, isAdmin, findOne);
 
 
+/**
+ * @swagger
+ * /Empleado:
+ *   post:
+ *     summary: Crea un nuevo Empleado
+ *     tags: [Empleado]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Empleado'
+ *     responses:
+ *       201:
+ *         description: El Empleado fue creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Empleado'
+ *       500:
+ *         description: Error en el servidor
+ */
 empleadoRoutes.post('/', sanitizeEmpleadoInput, verifyToken, isAdmin, add);
+
+
+/**
+ * @swagger
+ * /Empleado/{idEmpleado}:
+ *   put:
+ *     summary: Modifica un Empleado por ID
+ *     tags: [Empleado]
+ *     parameters:
+ *       - in: path
+ *         name: idEmpleado
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: El ID del Empleado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Empleado'
+ *     responses:
+ *       200:
+ *         description: Empleado modificado con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Empleado'
+ *       500:
+ *         description: Error en el servidor
+ */
 empleadoRoutes.put('/:idEmpleado', sanitizeEmpleadoInput, verifyToken, isAdmin, update);
+
+
+/**
+ * @swagger
+ * /Empleado/{idEmpleado}:
+ *   patch:
+ *     summary: Modifica un Empleado por ID
+ *     tags: [Empleado]
+ *     parameters:
+ *       - in: path
+ *         name: idEmpleado
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: El ID del Empleado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Empleado'
+ *     responses:
+ *       200:
+ *         description: Empleado modificado con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Empleado'
+ *       500:
+ *         description: Error en el servidor
+ */
 empleadoRoutes.patch('/:idEmpleado', sanitizeEmpleadoInput, verifyToken, isAdmin, update);
+
+
+/**
+ * @swagger
+ * /Empleado/{idEmpleado}:
+ *   delete:
+ *     summary: Elimina un Empleado por ID
+ *     tags: [Empleado]
+ *     parameters:
+ *       - in: path
+ *         name: idEmpleado
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: El ID del Empleado
+ *     responses:
+ *       200:
+ *         description: El Empleado fue eliminado con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Empleado'
+ *       500:
+ *         description: Error en el servidor
+ */
 empleadoRoutes.delete('/:idEmpleado', verifyToken, isAdmin, remove);
