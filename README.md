@@ -23,7 +23,7 @@ Gestion de Stock para tienda de indumentaria
 
 ## IMAGEN DEL MODELO:
 
-![image](https://drive.google.com/file/d/1hVD9TMT7StWMk5lK70eoJ_uyGX5cF6Yg/view?usp=sharing)
+![Imagen del modelo](https://imgur.com/jM9oXpP)
 
 
 https://drive.google.com/file/d/1hVD9TMT7StWMk5lK70eoJ_uyGX5cF6Yg/view?usp=sharing 
