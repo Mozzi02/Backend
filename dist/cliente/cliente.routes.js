@@ -68,7 +68,7 @@ export const clienteRoutes = Router();
  */
 /**
  * @swagger
- * /Cliente:
+ * /clientes:
  *   get:
  *     summary: Devuelve todas los clientes
  *     tags: [Cliente]
@@ -87,7 +87,7 @@ export const clienteRoutes = Router();
 clienteRoutes.get('/', verifyToken, findAll);
 /**
  * @swagger
- * /Cliente/{idCliente}:
+ * /clientes/{idCliente}:
  *   get:
  *     summary: Devuelve un Cliente por ID
  *     tags: [Cliente]
@@ -111,7 +111,7 @@ clienteRoutes.get('/', verifyToken, findAll);
 clienteRoutes.get('/:idCliente', verifyToken, findOne);
 /**
  * @swagger
- * /Cliente:
+ * /clientes:
  *   post:
  *     summary: Crea un nuevo Cliente
  *     tags: [Cliente]
@@ -134,7 +134,7 @@ clienteRoutes.get('/:idCliente', verifyToken, findOne);
 clienteRoutes.post('/', sanitizeClienteInput, verifyToken, add);
 /**
  * @swagger
- * /Cliente/{idCliente}:
+ * /clientes/{idCliente}:
  *   put:
  *     summary: Modifica un Cliente por ID
  *     tags: [Cliente]
@@ -164,7 +164,7 @@ clienteRoutes.post('/', sanitizeClienteInput, verifyToken, add);
 clienteRoutes.put('/:idCliente', sanitizeClienteInput, verifyToken, update);
 /**
  * @swagger
- * /Cliente/{idCliente}:
+ * /clientes/{idCliente}:
  *   patch:
  *     summary: Modifica un Cliente por ID
  *     tags: [Cliente]
@@ -194,7 +194,7 @@ clienteRoutes.put('/:idCliente', sanitizeClienteInput, verifyToken, update);
 clienteRoutes.patch('/:idCliente', sanitizeClienteInput, verifyToken, update);
 /**
  * @swagger
- * /Cliente/{idCliente}:
+ * /clientes/{idCliente}:
  *   delete:
  *     summary: Elimina un Cliente por ID
  *     tags: [Cliente]

@@ -19,7 +19,7 @@ export const categoriaRouter = Router();
  *           type: string
  *           description: La descripcion de la categoria
  *       example:
- *         id: 1
+ *         idCategoria: 1
  *         descripcion: Minorista
  */
 /**
@@ -30,7 +30,7 @@ export const categoriaRouter = Router();
  */
 /**
  * @swagger
- * /Categoria:
+ * /categorias:
  *   get:
  *     summary: Devuelve todas las categorias
  *     tags: [Categoria]
@@ -49,7 +49,7 @@ export const categoriaRouter = Router();
 categoriaRouter.get('/', verifyToken, findAll);
 /**
  * @swagger
- * /Categoria/{idCategoria}:
+ * /categorias/{idCategoria}:
  *   get:
  *      summary: Devuelve una categoria por ID
  *      tags: [Categoria]
@@ -74,7 +74,7 @@ categoriaRouter.get('/', verifyToken, findAll);
 categoriaRouter.get('/:idCategoria', verifyToken, findOne);
 /**
  * @swagger
- * /Categoria:
+ * /categorias:
  *   post:
  *     summary: Crea una nueva Categoria
  *     tags: [Categoria]
@@ -97,7 +97,7 @@ categoriaRouter.get('/:idCategoria', verifyToken, findOne);
 categoriaRouter.post('/', sanitizeCategoriaInput, verifyToken, add);
 /**
  * @swagger
- * /Categoria/{idCategoria}:
+ * /categorias/{idCategoria}:
  *   put:
  *     summary: Modifica una Categoria por ID
  *     tags: [Categoria]
@@ -127,7 +127,7 @@ categoriaRouter.post('/', sanitizeCategoriaInput, verifyToken, add);
 categoriaRouter.put('/:idCategoria', sanitizeCategoriaInput, verifyToken, update);
 /**
  * @swagger
- * /Categoria/{idCategoria}:
+ * /categorias/{idCategoria}:
  *   delete:
  *     summary: Elimina una Categoria por ID
  *     tags: [Categoria]

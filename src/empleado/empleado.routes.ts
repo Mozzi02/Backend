@@ -74,7 +74,7 @@ export const empleadoRoutes = Router();
 
 /**
  * @swagger
- * /Empleado:
+ * /empleados:
  *   get:
  *     summary: Devuelve todos los Empleados
  *     tags: [Empleado]
@@ -95,7 +95,7 @@ empleadoRoutes.get('/', verifyToken, isAdmin, findAll);
 
 /**
  * @swagger
- * /Empleado/{idEmpleado}:
+ * /empleados/{idEmpleado}:
  *   get:
  *     summary: Devuelve un Empleado por ID
  *     tags: [Empleado]
@@ -121,7 +121,7 @@ empleadoRoutes.get('/:idEmpleado', verifyToken, isAdmin, findOne);
 
 /**
  * @swagger
- * /Empleado:
+ * /empleados:
  *   post:
  *     summary: Crea un nuevo Empleado
  *     tags: [Empleado]
@@ -146,7 +146,7 @@ empleadoRoutes.post('/', sanitizeEmpleadoInput, verifyToken, isAdmin, add);
 
 /**
  * @swagger
- * /Empleado/{idEmpleado}:
+ * /empleados/{idEmpleado}:
  *   put:
  *     summary: Modifica un Empleado por ID
  *     tags: [Empleado]
@@ -178,7 +178,7 @@ empleadoRoutes.put('/:idEmpleado', sanitizeEmpleadoInput, verifyToken, isAdmin, 
 
 /**
  * @swagger
- * /Empleado/{idEmpleado}:
+ * /empleados/{idEmpleado}:
  *   patch:
  *     summary: Modifica un Empleado por ID
  *     tags: [Empleado]
@@ -210,7 +210,7 @@ empleadoRoutes.patch('/:idEmpleado', sanitizeEmpleadoInput, verifyToken, isAdmin
 
 /**
  * @swagger
- * /Empleado/{idEmpleado}:
+ * /empleados/{idEmpleado}:
  *   delete:
  *     summary: Elimina un Empleado por ID
  *     tags: [Empleado]
