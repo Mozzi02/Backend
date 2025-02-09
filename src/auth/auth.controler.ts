@@ -16,7 +16,6 @@ function sanitizeAuthInput(req: Request, res: Response, next: NextFunction){
     email: req.body.email,
     password: req.body.password
   }
-  console.log(req.body.sanitizedInput);
   Object.keys(req.body.sanitizedInput).forEach(key => {
     if(req.body.sanitizedInput[key] === undefined) {
       delete req.body.sanitizedInput[key];
