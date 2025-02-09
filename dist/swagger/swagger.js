@@ -1,5 +1,4 @@
 import swaggerJsdoc from 'swagger-jsdoc';
-import { PORT } from '../config.js';
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -11,7 +10,7 @@ const options = {
                 name: 'Mozzi'
             },
             servers: [{
-                    url: `http://localhost:${PORT}/`,
+                    url: `http://localhost:${process.env.PORT}/`,
                     description: 'Local server'
                 }]
         }

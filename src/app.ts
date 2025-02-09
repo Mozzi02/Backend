@@ -14,7 +14,6 @@ import { pedidoRoutes } from './pedido/pedido.routes.js';
 import { ventaRoutes } from './venta/venta.routes.js';
 import cors from 'cors';
 import { authRoutes } from './auth/auth.routes.js';
-import { PORT } from './config.js';
 import swaggerUI from 'swagger-ui-express';
 import specs from './swagger/swagger.js';
 import dotenv from 'dotenv';
@@ -57,6 +56,6 @@ app.use((_, res) => {
 await syncSchema();
 
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}/`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on http://localhost:${process.env.PORT}/`);
 });
